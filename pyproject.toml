@@ -11,6 +11,7 @@ python = "^3.10"
 influxdb = "^5.3.1"
 python-decouple = "^3.6"
 loguru = "^0.6.0"
+apscheduler = "^3.9.1.post1"
 
 
 [tool.poetry.group.dev.dependencies]

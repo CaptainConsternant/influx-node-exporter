@@ -1,0 +1,11 @@
+[Unit]
+Description=Python service pushing to influxdb feeding grafana 
+
+[Install]
+WantedBy=default.target
+
+[Service]
+# Command to execute when the service is started
+# systemctl --user start ...
+# ~/.config/systemd/user/
+ExecStart=/home/alex/.cache/pypoetry/virtualenvs/influx-node-exporter-YHwKCBhg-py3.10/bin/python /home/alex/apps/influx-node-exporter/main.py

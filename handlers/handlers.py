@@ -1,7 +1,6 @@
 from decouple import config
 from influxdb import InfluxDBClient
-from loguru import logger as log
-
+from log import log
 
 class Handler():
     database_name = "default"
@@ -22,3 +21,7 @@ class Handler():
     def write_buffer_to_db(self):
         self.client.write_points(self.data_buffer)
         self.data_buffer=[]
+
+    def run(self):
+        self.collect()
+        self.write_buffer_to_db()

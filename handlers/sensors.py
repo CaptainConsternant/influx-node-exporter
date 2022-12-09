@@ -22,10 +22,10 @@ class SensorsHandler(Handler):
 
                 for coreidstr, fields in vals.items():
                     if isinstance(fields,dict):
-                        isa_num=(re.findall('\d', k) or [''])[0]
-                        core_num=(re.findall('\d', coreidstr) or [''])[0]
+                        isa_num=(re.findall('\d+', k) or [''])[0]
+                        core_num=(re.findall('\d+', coreidstr) or [''])[0]
                         identifier =f"{isa_num}-{core_num}"
-                        clean_fields = {re.sub('\d','',y):t for y,t in fields.items()}
+                        clean_fields = {re.sub('\d*','',y):t for y,t in fields.items()}
                         r= {
                                 "measurement": "cpu_temp",
                                 "tags":{
@@ -39,10 +39,10 @@ class SensorsHandler(Handler):
             elif "power" in k:
                 for pduidstr, fields in vals.items():
                     if isinstance(fields,dict):
-                        sens_num=(re.findall('\d', k) or [''])[0]
-                        pdu_num=(re.findall('\d', pduidstr) or [''])[0]
+                        sens_num=(re.findall('\d+', k) or [''])[0]
+                        pdu_num=(re.findall('\d+', pduidstr) or [''])[0]
                         identifier =f"{pdu_num}-{core_num}"
-                        clean_fields = {re.sub('\d','',y):t for y,t in fields.items()}
+                        clean_fields = {re.sub('\d*','',y):t for y,t in fields.items()}
                         r= {
                                 "measurement": "pow_meter",
                                 "tags":{
