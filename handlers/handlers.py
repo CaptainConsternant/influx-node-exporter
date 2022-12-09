@@ -11,7 +11,7 @@ class Handler():
         self.client = InfluxDBClient(host=config("INFLUXDB_HOST",default='localhost'), port=config("INFLUXDB_PORT", default=8086))
         self.client.create_database(self.database_name)
         self.client.switch_database(self.database_name)
-        client.alter_retention_policy('autogen', self.databese_name, duration=kwargs.get('duration','12w'))
+        self.client.alter_retention_policy('autogen', self.database_name, duration=kwargs.get('duration','12w'))
         log.info(f"Successfully connected to {self.database_name}")
 
         self.data_buffer=[]
