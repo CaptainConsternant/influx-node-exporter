@@ -1,7 +1,10 @@
+import os, time
 from handlers.sensors import SensorsHandler
 from apscheduler.schedulers.blocking import BlockingScheduler
 from log import log
 if __name__ == "__main__":
+    os.environ['TZ'] = 'Europe/Paris' # set new timezone
+    time.tzset()
     log.info("Launching script")
     scheduler = BlockingScheduler(timezone="Europe/Paris")
     sh=SensorsHandler()

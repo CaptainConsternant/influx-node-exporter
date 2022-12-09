@@ -1,4 +1,63 @@
 # tunnel
-ssh -L 8086:10.101.19.251:8086 -N -f alex@192.168.0.60
+ssh - L 8086: 10.101.19.130: 8086 - N - f alex @192.168.0.60
 
 
+apk add influxdb
+rc-update add influxdb
+rc-service influxdb restart
+rc-service influxdb status
+
+import os, time
+print(time.strftime('%Y-%m-%d %H:%M:%S')) # before timezone change
+os.environ['TZ'] = 'Europe/Paris' # set new timezone
+time.tzset()
+
+from handlers.sensors import SensorsHandler
+sh=SensorsHandler()
+sh.collect()
+sh.write_buffer_to_db()
+sh.collect()
+sh.client.query('SELECT "temp_max" FROM "sensors"."autogen"."cpu_temp"')
+
+from influxdb import InfluxDBClient
+client = InfluxDBClient("10.101.19.167", 8086)
+client.create_database('pyexample')
+client.get_list_database()
+client.switch_database('pyexample')
+json_body = [
+    {
+        "measurement": "brushEvents",
+        "tags": {
+            "user": "Carol",
+            "brushId": "6c89f539-71c6-490d-a28d-6c5d84c0ee2f"
+        },
+        "time": "2018-03-28T8:01:00Z",
+        "fields": {
+            "duration": 127
+        }
+    },
+    {
+        "measurement": "brushEvents",
+        "tags": {
+            "user": "Carol",
+            "brushId": "6c89f539-71c6-490d-a28d-6c5d84c0ee2f"
+        },
+        "time": "2018-03-29T8:04:00Z",
+        "fields": {
+            "duration": 132
+        }
+    },
+    {
+        "measurement": "brushEvents",
+        "tags": {
+            "user": "Carol",
+            "brushId": "6c89f539-71c6-490d-a28d-6c5d84c0ee2f"
+        },
+        "time": "2018-03-30T8:02:00Z",
+        "fields": {
+            "duration": 129
+        }
+    }
+]
+client.write_points(json_body)
+client.query('SELECT "duration" FROM "pyexample"."autogen"."brushEvents" WHERE time > now() - 4d GROUP BY "user"')
