@@ -1,0 +1,10 @@
+#test
+SMARTHandler:
+  db_name: "smartctl"
+  # <DP> will be replaced by drives path and <CI> by cciss_identifiers 
+  # -j option is mandatory (json output)
+  cmd: "sudo smartctl -a -j -l error <DP> -d cciss,<CI>"
+  drive_paths: ["/dev/sda"]
+  cciss_identifiers: [0,1,2,3]
+SensorsHandler:
+  db_name: sensors
