@@ -8,4 +8,5 @@ WantedBy=default.target
 # Command to execute when the service is started
 # systemctl --user start ...
 # ~/.config/systemd/user/
+WorkingDirectory=/home/alex/apps/influx-node-exporter/
 ExecStart=/home/alex/.cache/pypoetry/virtualenvs/influx-node-exporter-YHwKCBhg-py3.10/bin/python /home/alex/apps/influx-node-exporter/main.py
