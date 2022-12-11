@@ -1,10 +1,26 @@
 #test
+app:
+  # List of handlers classes to run, tnote they are imported in handlers.__init__.py to be found by main.py
+  handlers_enabled:
+    - SMARTHandler
+    - SensorsHandler
+
 SMARTHandler:
   db_name: "smartctl"
-  # <DP> will be replaced by drives path and <CI> by cciss_identifiers 
+  # <DP> will be replaced by drives path  eg /dev/sda and <CI> by cciss_identifiers  eg 0
   # -j option is mandatory (json output)
   cmd: "sudo smartctl -a -j -l error <DP> -d cciss,<CI>"
+  cmd_interval_sec: 3600 
   drive_paths: ["/dev/sda"]
   cciss_identifiers: [0,1,2,3]
+  has_maintenance: True
+  maintenance_interval_sec: 604800 
+  maintenance_cmds:
+    - "smartctl -t short <DP> -d cciss,<CI>"
+  
+
 SensorsHandler:
   db_name: sensors
+  cmd_interval_sec: 60 
+  has_maintenance: False
+

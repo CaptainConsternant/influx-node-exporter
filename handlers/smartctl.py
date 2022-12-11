@@ -11,6 +11,7 @@ from .handlers import Handler
 class SMARTHandler(Handler):
     """
     Collects information based on smartctl
+    Gets command to run from config.yaml
 
     :param Handler: _description_
     :type Handler: _type_
@@ -57,3 +58,18 @@ class SMARTHandler(Handler):
                     "time": datetime.datetime.now().isoformat(),
                 }
                 self.data_buffer.append(r)
+
+    def run_maintenance(self):
+        for cmd in self.config["maintenance_cmds"]:
+            for drive in self.config["drive_paths"]:
+                for cciss in self.config["cciss_identifiers"]:
+                    cmd = subprocess.run(
+                        (
+                            cmd.replace("<DP>", str(drive))
+                            .replace("<CI>", str(cciss))
+                            .split(" ")
+                        ),
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        text=True,
+                    )

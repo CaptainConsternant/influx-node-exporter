@@ -10,7 +10,6 @@ class Handler:
         self.config = yaml.safe_load(open("config.yaml"))[self.__class__.__name__]
         self.database_name = self.config["db_name"]
 
-        # TODO implement >>> client = InfluxDBClient(host='mydomain.com', port=8086, username='myuser', password='mypass' ssl=True, verify_ssl=True)
         self.client = InfluxDBClient(
             host=config("INFLUXDB_HOST", default="localhost"),
             port=config("INFLUXDB_PORT", default=8086),
@@ -21,18 +20,31 @@ class Handler:
         )
         self.client.create_database(self.database_name)
         self.client.switch_database(self.database_name)
+        # TODO implement retention here
         # self.client.alter_retention_policy('autogen', self.database_name, duration=kwargs.get('duration','4w'))
         log.info(f"Successfully connected to {self.database_name}")
 
         self.data_buffer = []
 
     def collect(self):
+        log.info("collect")
+        """Main process to collect data"""
         raise NotImplementedError
 
     def write_buffer_to_db(self):
+        """Write data points to influx"""
         self.client.write_points(self.data_buffer)
+        log.info(f"saved {self.data_buffer}")
         self.data_buffer = []
 
     def run(self):
+        """Runs main collect and write process. (Wrapper used for scheduling job purposes)
+        This is launched by an APScheduler job, at an interval specified in config.yaml"""
         self.collect()
         self.write_buffer_to_db()
+
+    def run_maintenance(self):
+        """Some handlers require some regular maintenance, i.e. operations not destined to collect data,
+        but rather to force update of said data (smart tests for instance).
+        This is a way of managing them if not ran otherwise"""
+        raise NotImplementedError
