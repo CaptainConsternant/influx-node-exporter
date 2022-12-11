@@ -32,42 +32,28 @@ class SMARTHandler(Handler):
                     text=True,
                 )
 
-                raw_info = json.loads(cmd.stdout)
-        # for k, vals in raw.items():
-        #     if "coretemp" in k:
-
-        #         for coreidstr, fields in vals.items():
-        #             if isinstance(fields, dict):
-        #                 isa_num = (re.findall("\d+", k) or [""])[0]
-        #                 core_num = (re.findall("\d+", coreidstr) or [""])[0]
-        #                 identifier = f"{isa_num}-{core_num}"
-        #                 clean_fields = {
-        #                     re.sub("\d*", "", y): t for y, t in fields.items()
-        #                 }
-        #                 r = {
-        #                     "measurement": "cpu_temp",
-        #                     "tags": {
-        #                         "identifier": identifier,
-        #                     },
-        #                     "fields": clean_fields,
-        #                     "time": datetime.datetime.now().isoformat(),
-        #                 }
-        #                 self.data_buffer.append(r)
-        #     elif "power" in k:
-        #         for pduidstr, fields in vals.items():
-        #             if isinstance(fields, dict):
-        #                 sens_num = (re.findall("\d+", k) or [""])[0]
-        #                 pdu_num = (re.findall("\d+", pduidstr) or [""])[0]
-        #                 identifier = f"{pdu_num}-{core_num}"
-        #                 clean_fields = {
-        #                     re.sub("\d*", "", y): t for y, t in fields.items()
-        #                 }
-        #                 r = {
-        #                     "measurement": "pow_meter",
-        #                     "tags": {
-        #                         "identifier": identifier,
-        #                     },
-        #                     "fields": clean_fields,
-        #                     "time": datetime.datetime.now().isoformat(),
-        #                 }
-        #                 self.data_buffer.append(r)
+                js = json.loads(cmd.stdout)
+                r = {
+                    "measurement": "smart_meter",
+                    "tags": {
+                        "identifier": js["device"]["info_name"],
+                    },
+                    "fields": {
+                        "vendor": js["vendor"],
+                        "capacity_bytes": js["user_capacity"]["bytes"],
+                        "rpm": js["rotation_rate"],
+                        "temp": js["temperature"]["current"],
+                        "power_on_minutes": js["power_on_time"]["hours"] * 60
+                        + js["power_on_time"]["minutes"],
+                        "smart_passed": js["smart_status"]["passed"],
+                        "errors": js["scsi_grown_defect_list"]
+                        + js["scsi_error_counter_log"]["read"][
+                            "total_uncorrected_errors"
+                        ]
+                        + js["scsi_error_counter_log"]["write"][
+                            "total_uncorrected_errors"
+                        ],
+                    },
+                    "time": datetime.datetime.now().isoformat(),
+                }
+                self.data_buffer.append(r)
