@@ -39,7 +39,7 @@ class Handler:
         for r in self.data_buffer:
             r["tags"]["host"] = self.host
         self.client.write_points(self.data_buffer)
-        log.info(f"saved {self.data_buffer}")
+        log.debug(f"saved {self.data_buffer}")
         self.data_buffer = []
 
     def run(self):

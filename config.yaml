@@ -10,7 +10,7 @@ SMARTHandler:
   # <DP> will be replaced by drives path  eg /dev/sda and <CI> by cciss_identifiers  eg 0
   # -j option is mandatory (json output)
   cmd: "sudo smartctl -a -j -l error <DP> -d cciss,<CI>"
-  cmd_interval_sec: 3600 
+  cmd_interval_sec: 43200 
   drive_paths: ["/dev/sda"]
   cciss_identifiers: [0,1,2,3]
   has_maintenance: True
