@@ -1,3 +1,5 @@
+import socket
+
 import yaml
 from decouple import config
 from influxdb import InfluxDBClient
@@ -9,6 +11,7 @@ class Handler:
     def __init__(self, *args, **kwargs):
         self.config = yaml.safe_load(open("config.yaml"))[self.__class__.__name__]
         self.database_name = self.config["db_name"]
+        self.host = socket.gethostname()
 
         self.client = InfluxDBClient(
             host=config("INFLUXDB_HOST", default="localhost"),
@@ -33,6 +36,8 @@ class Handler:
 
     def write_buffer_to_db(self):
         """Write data points to influx"""
+        for r in self.data_buffer:
+            r["tags"]["host"] = self.host
         self.client.write_points(self.data_buffer)
         log.info(f"saved {self.data_buffer}")
         self.data_buffer = []
