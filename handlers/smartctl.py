@@ -60,12 +60,12 @@ class SMARTHandler(Handler):
                 self.data_buffer.append(r)
 
     def run_maintenance(self):
-        for cmd in self.config["maintenance_cmds"]:
+        for cmdstr in self.config["maintenance_cmds"]:
             for drive in self.config["drive_paths"]:
                 for cciss in self.config["cciss_identifiers"]:
                     cmd = subprocess.run(
                         (
-                            cmd.replace("<DP>", str(drive))
+                            cmdstr.replace("<DP>", str(drive))
                             .replace("<CI>", str(cciss))
                             .split(" ")
                         ),
