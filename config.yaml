@@ -16,7 +16,7 @@ SMARTHandler:
   has_maintenance: True
   maintenance_interval_sec: 604800 
   maintenance_cmds:
-    - "smartctl -t short <DP> -d cciss,<CI>"
+    - "sudo smartctl -t short <DP> -d cciss,<CI>"
   
 
 SensorsHandler:
