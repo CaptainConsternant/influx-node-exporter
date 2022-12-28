@@ -4,6 +4,8 @@ This is a set of handlers to export some data to an influxdb, with the purpose o
 
 This is developped in python3.
 
+<b> Pull requests are welcome </b>
+
 ### Installation
 
 Installation is rather straight forward 
