@@ -1,0 +1,2 @@
+git remote add github git@github.com:CaptainConsternant/influx-node-exporter.git
+git push -u github
