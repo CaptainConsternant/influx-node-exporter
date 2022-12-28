@@ -1,4 +1,4 @@
-## influx-node-exporter
+### influx-node-exporter
 
 This is a set of handlers to export some data to an influxdb, with the purpose of monitoring them via grafana.
 
